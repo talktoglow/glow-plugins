@@ -6,7 +6,7 @@ Claude Code plugins for [Glow](https://talktoglow.com).
 
 ```shell
 # Step 1: Add the marketplace
-/plugin marketplace add chrismaresca/glow-plugins
+/plugin marketplace add talktoglow/glow-plugins
 
 # Step 2: Install the plugin
 /plugin install glow@glow-plugins
@@ -25,7 +25,7 @@ IMPORTANT: This DOES NOT WORK with private repositories, so our existing 'Glow P
 1. Open Claude Desktop App and navigare to Cowork
 2. Open the 'Customize' tab and find the '+' button under 'Personal Plugins'
 3. Hover over '+ Create Plugin' and select 'Add Marketplace'.
-4. in the URL field, enter `chrismaresca/glow-plugins` and click 'Sync'.
+4. in the URL field, enter `talktoglow/glow-plugins` and click 'Sync'.
 5. It may say 'Still syncing. Your marketplace will appear in the Personal tab when it's ready.' Or spin for a little while, that's okay.
 6. Click the '+' button under 'Personal Plugins' again.
 7. Click 'Browse Plugins' and navigate to 'Personal'
