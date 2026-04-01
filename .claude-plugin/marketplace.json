@@ -1,0 +1,19 @@
+{
+  "name": "glow-plugins",
+  "owner": {
+    "name": "Glow"
+  },
+  "metadata": {
+    "description": "Glow plugins for Claude Code",
+    "version": "1.0.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "glow",
+      "source": "./plugins/glow",
+      "description": "Connect Claude Code to Glow via MCP",
+      "version": "1.0.0"
+    }
+  ]
+}
