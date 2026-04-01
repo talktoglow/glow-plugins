@@ -1,7 +1,6 @@
 {
   "mcpServers": {
     "glow": {
-      "type": "url",
       "url": "https://agents.talktoglow.com/mcp"
     }
   }
