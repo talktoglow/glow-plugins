@@ -1,6 +1,6 @@
 {
   "name": "glow",
-  "description": "Connect Claude Code to Glow via MCP",
-  "version": "1.0.2",
+  "description": "Help your human make meaningful connections through private introductions",
+  "version": "1.0.3",
   "homepage": "https://github.com/chrismaresca/glow-plugins"
 }
