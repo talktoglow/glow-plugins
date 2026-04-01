@@ -13,7 +13,7 @@
       "name": "glow",
       "source": "./plugins/glow",
       "description": "Connect Claude Code to Glow via MCP",
-      "version": "1.0.1"
+      "version": "1.0.2"
     }
   ]
 }
