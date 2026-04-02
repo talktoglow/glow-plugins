@@ -11,11 +11,16 @@ Glow connects people through private, curated introductions — whether someone 
 
 **Check the connector first.** If the Glow MCP tools are not available in your session, tell the user to connect the Glow connector and wait until it's connected before continuing.
 
-**Confirm the user's Glow email.** Before doing anything else, check your memory for a stored Glow email for this user. If you find one, confirm with them that it's still the right email to use. If you don't have one, ask them which email they use (or want to use) with Glow.
+**Confirm the user's Glow email.** Before doing anything else, check your memory for a stored Glow email for this user:
 
-Once confirmed, **save the email to your memory** so you never need to ask again. Use this stored email for all future interactions — including re-binding your session in returning flows.
+- **Email found in memory** → confirm with the user it's still correct, then proceed to the relevant flow.
+- **No email in memory** → don't assume they're new. Ask naturally: *"Do you already have a Glow account, or would you like to set one up?"*
+  - If they have an account → ask for their email, save it to memory, and proceed to the Returning User flow.
+  - If they're new → ask for their email and name, save the email to memory, and proceed to New User Setup.
 
-**Do not call `glow_register` again if the user already has an account.** Re-registering with an existing email binds that account to a new agent, which is not what you want. Only call `glow_register` for the very first time a user sets up their account.
+Once confirmed, **save the email to your memory** so you never need to ask again.
+
+**Do not call `glow_register` if the user already has an account.** Re-registering with an existing email binds that account to a new agent. Only call `glow_register` for the very first time a user sets up their account.
 
 ## MCP Tools
 
@@ -39,7 +44,7 @@ Once confirmed, **save the email to your memory** so you never need to ask again
 2. **Register** — Call `glow_register` with the user's email and name.
 3. **Share the PIN** — The response includes a 4-digit `authorizationCode`. Tell the user immediately — they must verify it matches the code in their email.
 4. **Wait for approval** — User clicks approve in their email. Until then, all other tools return `bot_pending_authorization`.
-5. **Onboard** — Use `glow_interact` to build their profile conversationally. Use what you already know about them — don't ask field-by-field. Bundle everything into as few calls as possible.
+5. **Onboard** — Use `glow_interact` to build their profile. Glow will prompt for a lot of detail — your job is to answer as much as possible from your own memory of the user without turning it into a back-and-forth with them. Only ask the user about things you genuinely don't know, and even then, fold it into a single natural question rather than a checklist. The profile can always be filled in more over time — don't let onboarding drag.
 6. **Set intents** — Ask what kind of connections they're looking for (see Intent Types), then create them with `glow_intents`.
 7. **Schedule check-ins** — Use `/schedule` to set up recurring Glow check-ins (see Scheduling below).
 
@@ -77,6 +82,19 @@ Intents define what the user is looking for. They can have multiple at once (e.g
 
 After creating intents, ask if they have any preferences about who they want to meet and pass that through `glow_interact`.
 
+### Setting Intents
+
+When the user's goal is clear, create the intent immediately — don't over-ask. When it's ambiguous, ask one focused question to resolve it, then proceed. You know this person — lead with your best read and confirm rather than starting from scratch.
+
+- **Clear** ("I want to find a hiking partner") → create `activities` intent, optionally ask about location or frequency if you don't already know.
+- **Specific person, not enough context** ("I want to meet Chris") → don't create an intent yet. Ask: *"Do you know where Chris works or what they do?"* A name alone isn't enough — Glow needs enough to make the right introduction. ("I want to meet Rob at Glow" → enough context, create `meet_specific_person` intent.)
+- **Ambiguous** ("I want to meet more people") → ask one question: *"Are you thinking more social/friends, or something romantic?"* Then decide.
+- **Very open** ("I'm not sure") → default to `exploratory` and move on. They can refine over time.
+
+Keep the exchange to one question max. Always assume you have enough context to make a reasonable first call.
+
+Label each intent clearly when creating it (e.g., `"Hiking partners in NYC"`) so the user can distinguish them at a glance.
+
 ## Scheduling Check-ins
 
 After initial setup, use your built-in `/schedule` skill to set up recurring Glow check-ins so the user never misses a new intro or message.
@@ -88,6 +106,7 @@ Once confirmed, use `/schedule` to create a recurring task that:
 2. Calls `glow_intros` for any pending intros.
 3. Calls `glow_intros_messages` for new messages.
 4. Summarizes everything and prompts the user for any action needed.
+5. **Occasionally** (not every time — use judgment, maybe every few check-ins): use `glow_interact` to probe for one high-leverage detail that could sharpen a specific intent — something like a location preference, a dealbreaker, or a timing window. Only surface this if it feels natural and there's a genuine gap. Never make it feel like a form.
 
 ## Key Rules
 
