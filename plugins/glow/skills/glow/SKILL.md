@@ -1,11 +1,9 @@
 ---
 name: glow
-description: Help your human find meaningful connections through private introductions — dating, friendships, activity partners, or professional networking. Use when the user wants to meet people, find connections, or manage their Glow account.
+description: Help your human find meaningful connections through private introductions across dating, friendships, activity partners, professional networking, or even meeting specific people! Use when the user wants to meet a specific person, find general connections, or manage their Glow account!
 ---
 
 # Glow
-
-> Help your human find meaningful connections through private introductions — dating, friendships, activity partners, professional networking, or meeting specific people.
 
 Glow connects people through private, curated introductions. Your role is to act on your human's behalf: set up their profile, manage their intents, review incoming intros, coordinate messages, and keep them updated on what's happening.
 
@@ -13,9 +11,11 @@ Glow connects people through private, curated introductions. Your role is to act
 
 **Check the connector first.** If the Glow MCP tools are not available in your session, tell the user to connect the Glow connector and wait until it's connected before continuing.
 
-**Check for an existing account.** Ask the user if they already have a Glow account before registering:
-- If yes → call `glow_register` with their email to re-bind your session, then skip to the relevant flow below.
-- If no → proceed with new user setup.
+**Confirm the user's Glow email.** Before doing anything else, check your memory for a stored Glow email for this user. If you find one, confirm with them that it's still the right email to use. If you don't have one, ask them which email they use (or want to use) with Glow.
+
+Once confirmed, **save the email to your memory** so you never need to ask again. Use this stored email for all future interactions — including re-binding your session in returning flows.
+
+**Do not call `glow_register` again if the user already has an account.** Re-registering with an existing email binds that account to a new agent, which is not what you want. Only call `glow_register` for the very first time a user sets up their account.
 
 ## MCP Tools
 
@@ -46,7 +46,7 @@ Glow connects people through private, curated introductions. Your role is to act
 ### Returning User
 
 1. **Check connector** — Confirm Glow tools are available. If not, ask the user to connect the Glow connector.
-2. **Re-bind session** — Call `glow_register` with their email to reconnect.
+2. **Confirm email from memory** — Retrieve the stored Glow email. Do not call `glow_register` again — the account is already set up and bound to your agent.
 3. **Quick status** — Call `glow_status` for a dashboard overview.
 4. **Review pending intros** — Call `glow_intros` with action `pending`.
 5. **Check messages** — Call `glow_intros_messages` for the inbox.
@@ -90,7 +90,8 @@ Once confirmed, schedule a recurring task that:
 ## Key Rules
 
 - **Connector first** — If Glow tools aren't available, ask the user to connect the Glow connector before doing anything else.
-- **Register first** — `glow_register` must be called before any other tool. All others are gated behind it.
+- **Register only once** — `glow_register` is for first-time setup only. Re-registering an existing email binds the account to a new agent. For returning users, use the email from memory and skip registration.
+- **Store the email in memory** — Always save the user's Glow email to your memory after confirming it. Use it for every future interaction without asking again.
 - **Use what you know** — When building profiles or intents, draw from your conversation context. Don't interrogate the user field-by-field.
 - **One intent per `glow_interact` call** — Don't combine multiple actions in one message.
 - **Profile updates are async** — Wait a few seconds after `glow_interact` or `glow_me` update before checking completeness.
