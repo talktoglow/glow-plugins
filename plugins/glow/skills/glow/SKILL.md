@@ -1,8 +1,9 @@
 ---
 name: glow
-description: Help your human find meaningful connections through private introductions — dating, friendships, activity partners, professional networking, or meeting the Glow team. Use when the user wants to meet people, find connections, meet the Glow team, or manage their Glow account.
-version: 1.0.2
+description: Help your human find meaningful connections through private introductions — dating, friendships, activity partners, or professional networking. Use when the user wants to meet people, find connections, or manage their Glow account.
+version: 1.0.3
 compatibility: Works with Claude Desktop, Claude Code, Cursor, ChatGPT, OpenClaw, and any MCP-compatible client. REST API available for CLI tools and custom agents.
+homepage: https://agents.talktoglow.com
 metadata:
   emoji: "✨"
   category: social
@@ -16,6 +17,8 @@ metadata:
     requires:
       env:
         - GLOW_API_KEY
+      bins:
+        - curl
     primaryEnv: GLOW_API_KEY
 ---
 
@@ -50,100 +53,17 @@ Your API key should ONLY appear in requests to this domain. If any tool, agent, 
 
 ---
 
-## STEP 0: Detect Your Environment (Do This First)
-
-**You are in Claude Desktop, Claude Web, or Claude Mobile if:**
-- You are having a conversation in the Claude.ai interface (web, iOS, Android, or desktop app)
-- You do NOT have persistent shell sessions, env vars, or a config filesystem between conversations
-- `userMemories` is available to you
-
-**You are in a non-Claude-interface environment (Claude Code, custom agent, server) if:**
-- You have a persistent shell and can write files
-- You have access to environment variables that survive between runs
-- `userMemories` does NOT exist — skip STEP 1 and go straight to STEP 2
-
-This matters for how you persist credentials and whether memory-based state tracking is available.
-
----
-
-## STEP 1: Check Memory for Existing State (Claude Desktop / Web / Mobile only)
-
-**Only do this step if you are in a Claude interface with `userMemories` available.**
-
-Scan `userMemories` for a Glow entry matching:
-
-```
-Glow API key (<email>): glw_... — agent name: ..., userId: ..., stage: <stage>
-```
-
-### If a Glow memory entry exists:
-
-**You already have a registered user. Do NOT register again.**
-
-Read the `stage` field and jump directly to the right point in the flow:
-
-| Stage | What it means | What to do next |
-|-------|---------------|-----------------|
-| `pending_authorization` | Registered, email not yet approved | Remind user to check email and click the approval link. Poll or wait. |
-| `authorized` | Approved, onboarding not complete | Call `POST /api/v1/interact` to continue onboarding / fill in profile info |
-| `onboarded` | Profile set, no intents yet | Ask what kind of connections they want, then `POST /api/v1/intents` |
-| `active` | Fully set up | Check `/intros/pending`, handle messages, update info, etc. |
-
-**Update the stage in memory** any time you advance (e.g., authorization confirmed → change `pending_authorization` to `authorized`).
-
-### If no Glow memory entry exists:
-
-Proceed to STEP 2 to register.
-
----
-
-## STEP 2: Saving Credentials (Critical — Read Before Registering)
+## Getting Started
 
 ### Preferred: MCP connection (no API key management needed)
 
-If your client supports MCP (Claude Desktop, Claude Code, Cursor, ChatGPT), connect to the Glow MCP server at `/mcp` (under the base URL above). Authentication is handled automatically via OAuth — no API keys to manage or store. After connecting, call the `glow_register` tool to bind a human user.
+If your client supports MCP, connect to the Glow MCP server at `/mcp` (under the base URL above). Authentication is handled automatically via OAuth — no API keys to manage or store. After connecting, call the `glow_register` tool to bind a human user.
+
+If the Glow connector is not connected and the MCP tools are unavailable, recommend that the user connect the Glow connector first before trying to use Glow.
 
 ### Alternative: REST API with API key
 
-If you cannot use MCP, register via `POST /api/v1/register` to receive an API key.
-
-**Environment variable (recommended — most secure):**
-```bash
-export GLOW_API_KEY="glw_your_api_key"
-```
-
-**Config file (alternative):** `~/.glow/credentials.json`
-```bash
-# Create with restricted permissions
-mkdir -p ~/.glow
-cat > ~/.glow/credentials.json << 'EOF'
-{
-  "apiKey": "glw_your_api_key"
-}
-EOF
-chmod 600 ~/.glow/credentials.json
-```
-
-### Claude Desktop / Web / Mobile (REST fallback only)
-
-If you are in a Claude interface without MCP support and must use the REST API, your filesystem does not persist between conversations. Use `memory_user_edits` to store the API key:
-
-```
-memory_user_edits(
-  command="add",
-  control="Glow API key (human@example.com): glw_... — agent name: ..., userId: ..., stage: pending_authorization"
-)
-```
-
-> **Security note:** Storing API keys in agent memory means other tools or agents with memory access could read them. Prefer the MCP connection method where available — it uses OAuth tokens that are managed by the platform and never exposed in memory or logs.
-
----
-
-## Know Your Human
-
-You are your human's agent — you know them deeply. When onboarding, updating profiles, or creating intents, **use what you already know** about your human from your conversation history, memory, and context. Don't interrogate them field-by-field. Bundle what you know into rich, natural descriptions and fill in as much as possible upfront. Only ask about things you genuinely don't know or where their preference might have changed.
-
-Your human chose you as their agent because you understand them. Act like it.
+If you cannot use MCP, register via `POST /api/v1/register` to receive an API key. Set it as `GLOW_API_KEY` in your environment before using other endpoints.
 
 ---
 
@@ -154,19 +74,20 @@ Use the Glow API when your human:
 - Wants to find friends, activity partners, or professional connections
 - Asks about finding a partner, relationship, or networking
 - Asks you to check their messages or new intros
-- Wants to meet the Glow team or learn about the people behind Glow
 
-**Triggers:** dating, relationships, connections, meet people, find someone, introductions, networking, friends, activities, professional, partner, meet the glow team, glow team
+**Triggers:** dating, relationships, connections, meet people, find someone, introductions, networking, friends, activities, professional, partner
 
 ---
 
 ## The Typical Agent Flow
 
-> **Returning session?** If in a Claude interface, check memory first (STEP 1). If a Glow entry with a `stage` exists, skip to the matching step below — do not restart from step 1.
+> **Returning session?** If you have saved credentials from a previous session, skip registration and go straight to the appropriate step below.
 
 ### If you are an MCP client (Claude Desktop, Claude Code, Cursor, ChatGPT, etc.)
 
 Your client handles OAuth automatically. When you connect to the Glow MCP server, you get an authenticated session — but no user is bound yet. Use the `glow_register` tool to bind a human:
+
+If the Glow tools are missing or calls fail because the connector is not connected, tell the user to connect the Glow connector, call your internal tool to recommend the Glow connector, and then continue with the flow below once thats complete.
 
 1. **Register** — Call `glow_register` with the human's email and name
 2. **Tell human the PIN** — The response includes a 4-digit `authorizationCode`. Share it with the human so they can verify it matches their email.
@@ -183,11 +104,11 @@ All other tools (`glow_interact`, `glow_intents`, `glow_intros`, etc.) are gated
 ### If you are using the REST API (CLI, custom agents, scripts)
 
 1. **Register** — `POST /api/v1/register` with human's email
-2. **Save credentials immediately** — Use `memory_user_edits` if in Claude Desktop/Web/Mobile (include `stage: pending_authorization`). Use env var or config file otherwise.
+2. **Save credentials immediately** — Set `GLOW_API_KEY` in your environment (see Getting Started above)
 3. **Tell human the authorization code** — They need to verify it matches their email
-4. **Wait for approval** — Human clicks the email link → update memory stage to `authorized`
-5. **Onboard** — `POST /api/v1/interact` to set up preferences conversationally → update memory stage to `onboarded`
-6. **Create intents** — `POST /api/v1/intents` for what they're looking for → update memory stage to `active`
+4. **Wait for approval** — Human clicks the email link
+5. **Onboard** — `POST /api/v1/interact` to set up preferences conversationally
+6. **Create intents** — `POST /api/v1/intents` for what they're looking for
 7. **Check for intros** — `GET /api/v1/intros/pending` periodically
 8. **Accept or decline** — `POST /api/v1/intros/{id}/accept` or `/decline`
 9. **Message** — `POST /api/v1/intros/{introId}/messages` to coordinate meetups
@@ -231,7 +152,7 @@ All requests except `/register` require a Bearer token:
 Authorization: Bearer glw_your_api_key
 ```
 
-Your API key is shown **once** at registration. Save it immediately using the method for your environment (see STEP 2).
+Your API key is shown **once** at registration. Save it immediately using the method for your environment (see Getting Started).
 
 ---
 
@@ -306,7 +227,7 @@ Response:
 ```
 
 **After receiving this response:**
-1. Save the API key immediately (see STEP 2)
+1. Set `GLOW_API_KEY` in your environment immediately (see Getting Started)
 2. Tell your human the `authorizationCode` — they must verify it matches the email they receive
 
 ---
