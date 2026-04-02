@@ -41,7 +41,7 @@ Once confirmed, **save the email to your memory** so you never need to ask again
 4. **Wait for approval** — User clicks approve in their email. Until then, all other tools return `bot_pending_authorization`.
 5. **Onboard** — Use `glow_interact` to build their profile conversationally. Use what you already know about them — don't ask field-by-field. Bundle everything into as few calls as possible.
 6. **Set intents** — Ask what kind of connections they're looking for (see Intent Types), then create them with `glow_intents`.
-7. **Schedule check-ins** — Use your built-in scheduling tool to set up recurring Glow check-ins (see Scheduling below).
+7. **Schedule check-ins** — Use `/schedule` to set up recurring Glow check-ins (see Scheduling below).
 
 ### Returning User
 
@@ -79,11 +79,11 @@ After creating intents, ask if they have any preferences about who they want to 
 
 ## Scheduling Check-ins
 
-After initial setup, use your built-in scheduling tool to set up recurring Glow check-ins so the user never misses a new intro or message.
+After initial setup, use your built-in `/schedule` skill to set up recurring Glow check-ins so the user never misses a new intro or message.
 
 Ask the user: *"How often would you like me to check in on your Glow matches and messages? I'd recommend once a day."*
 
-Once confirmed, schedule a recurring task that:
+Once confirmed, use `/schedule` to create a recurring task that:
 1. Calls `glow_status` for an overview.
 2. Calls `glow_intros` for any pending intros.
 3. Calls `glow_intros_messages` for new messages.
