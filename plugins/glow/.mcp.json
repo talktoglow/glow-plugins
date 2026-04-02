@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "glow": {
-      "command": "npx",
-      "args": ["mcp-remote", "https://agents.talktoglow.com/mcp"]
+      "type": "http",
+      "url": "https://agents.talktoglow.com/mcp"
     }
   }
 }
