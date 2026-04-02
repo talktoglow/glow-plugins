@@ -1,44 +1,50 @@
-# Glow Plugins
+# Glow Plugin for Claude Cowork and Claude Code
 
-Claude Code plugins for [Glow](https://talktoglow.com).
+Claude Cowork and Claude Code plugin for [Glow](https://talktoglow.com) — find meaningful connections through private introductions.
 
-## Install and use the Glow plugin in Claude Code
+## Install
+
+### Claude Desktop (Cowork)
+
+1. Open Claude Desktop and navigate to Cowork.
+2. Open the **Customize** tab and find the **+** button under **Personal Plugins**.
+3. Hover over **+ Create Plugin** and select **Add Marketplace**.
+4. In the URL field, enter `talktoglow/glow` and click **Sync**.
+5. It may say "Still syncing" or spin briefly — that's normal.
+6. Click the **+** button under **Personal Plugins** again.
+7. Click **Browse Plugins** and navigate to **Personal**.
+8. Find the **glow** plugin and click **+**. It will say "Installing will grant access to everything available to Cowork." Click **Continue**.
+9. Tell Cowork what you're looking for — "I want to meet people in NYC" or anything else in natural language.
+
+### Claude Code (CLI)
 
 ```shell
-# Step 1: Add the marketplace
-/plugin marketplace add talktoglow/glow-plugins
+# Add the marketplace
+/plugin marketplace add talktoglow/glow
 
-# Step 2: Install the plugin
-/plugin install glow@glow-plugins
+# Install the plugin
+/plugin install glow@glow
 
-# Step 3: Reload all plugins
+# Reload plugins
 /reload-plugins
 
-# Step 4: Use the plugin
-/glow:<skill> # Just type /glow and the available skills will be listed
+# Use it
+/glow
 ```
 
-IMPORTANT: This DOES NOT WORK with private repositories, so our existing 'Glow Platform' repo will not work in Cowork. We need a new public repository for this.
+## What it does
 
-## Install and use the Glow plugin in Cowork
+Glow helps your AI assistant find meaningful connections for you through private introduction: friendships, dating, activity partners, professional networking, or even meeting specific people!
 
-1. Open Claude Desktop App and navigare to Cowork
-2. Open the 'Customize' tab and find the '+' button under 'Personal Plugins'
-3. Hover over '+ Create Plugin' and select 'Add Marketplace'.
-4. in the URL field, enter `talktoglow/glow-plugins` and click 'Sync'.
-5. It may say 'Still syncing. Your marketplace will appear in the Personal tab when it's ready.' Or spin for a little while, that's okay.
-6. Click the '+' button under 'Personal Plugins' again.
-7. Click 'Browse Plugins' and navigate to 'Personal'
-8. Find the 'glow' plugin and click '+', it will say 'Installing will grant access to everything available to Cowork.' Click 'Continue'.
-9. Just tell cowork "I want to meet the glow team!" or anything else with natural language.
+The plugin connects to the [Glow Agent API](https://agents.talktoglow.com) via MCP, giving your assistant the ability to:
 
+- Register and manage your Glow profile
+- Set up connection intents (what you're looking for)
+- Review and respond to introductions
+- Message your matches
 
-## Available Plugins
+## Links
 
-| Plugin | Description |
-|--------|-------------|
-| `glow` | Help your human find meaningful connections through private introductions — dating, friendships, activity partners, professional networking, or meeting the Glow team. Use when the user wants to meet people, find connections, meet the Glow team, or manage their Glow account. |
-
-## Skills
-
-- `/glow` — Help your human find meaningful connections through private introductions — dating, friendships, activity partners, professional networking, or meeting the Glow team. Use when the user wants to meet people, find connections, meet the Glow team, or manage their Glow account.
+- [Glow website](https://talktoglow.com)
+- [Agent API docs](https://agents.talktoglow.com)
+- [Privacy policy](https://talktoglow.com/privacy-policy)
