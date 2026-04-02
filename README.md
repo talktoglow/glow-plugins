@@ -9,7 +9,7 @@ Claude Cowork and Claude Code plugin for [Glow](https://talktoglow.com) — find
 1. Open Claude Desktop and navigate to Cowork.
 2. Open the **Customize** tab and find the **+** button under **Personal Plugins**.
 3. Hover over **+ Create Plugin** and select **Add Marketplace**.
-4. In the URL field, enter `talktoglow/glow` and click **Sync**.
+4. In the URL field, enter `talktoglow/glow-plugins` and click **Sync**.
 5. It may say "Still syncing" or spin briefly — that's normal.
 6. Click the **+** button under **Personal Plugins** again.
 7. Click **Browse Plugins** and navigate to **Personal**.
@@ -20,10 +20,10 @@ Claude Cowork and Claude Code plugin for [Glow](https://talktoglow.com) — find
 
 ```shell
 # Add the marketplace
-/plugin marketplace add talktoglow/glow
+/plugin marketplace add talktoglow/glow-plugins
 
 # Install the plugin
-/plugin install glow@glow
+/plugin install glow-plugins@glow
 
 # Reload plugins
 /reload-plugins
