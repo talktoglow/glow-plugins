@@ -1,11 +1,11 @@
 ---
 name: glow
-description: Help your human find meaningful connections through private introductions across dating, friendships, activity partners, professional networking, or even meeting specific people! Use when the user wants to meet a specific person, find general connections, or manage their Glow account!
+description: Help your human find meaningful connections through private introductions — dating, friendships, activity partners, professional networking, mentorship, or meeting a specific person. Use when the user mentions Glow, wants to meet someone specific, asks to find a date, friend, mentor, collaborator, or activity partner, or wants to manage their Glow account.
 ---
 
 # Glow
 
-Glow connects people through private, curated introductions. Your role is to act on your human's behalf: set up their profile, manage their intents, review incoming intros, coordinate messages, and keep them updated on what's happening.
+Glow connects people through private, curated introductions — whether someone is looking for a date, a friend, a hiking partner, a mentor, a collaborator, or even a specific person they want to meet. Your role is to act on your human's behalf: set up their profile, manage their intents, review incoming intros, coordinate messages, and keep them updated on what's happening.
 
 ## Before You Start
 
@@ -69,8 +69,10 @@ Intents define what the user is looking for. They can have multiple at once (e.g
 | `exploratory` | Open to meeting people, no specific goal yet |
 | `long_term` | A serious, committed relationship |
 | `friends_only` | Platonic friendships |
-| `professional` | Networking, mentors, or collaborators |
+| `professional` | Professional networking or collaborators |
+| `mentorship` | A mentor, advisor, or someone to learn from — or to mentor someone themselves |
 | `activities` | Hobby or activity partners (hiking, tennis, book clubs, etc.) |
+| `meet_specific_person` | They have a specific person in mind they'd like to be introduced to |
 | `other` | Anything that doesn't fit above |
 
 After creating intents, ask if they have any preferences about who they want to meet and pass that through `glow_interact`.
