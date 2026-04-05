@@ -23,7 +23,7 @@ Claude Cowork and Claude Code plugin for [Glow](https://talktoglow.com) — find
 /plugin marketplace add talktoglow/glow-plugins
 
 # Install the plugin
-/plugin install glow-plugins@glow
+/plugin install glow@glow
 
 # Reload plugins
 /reload-plugins

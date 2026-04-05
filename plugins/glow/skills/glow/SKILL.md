@@ -9,7 +9,7 @@ Glow connects people through private, curated introductions — whether someone 
 
 ## Before You Start
 
-**Check the connector first.** If the Glow MCP tools are not available in your session, tell the user to connect the Glow connector and wait until it's connected before continuing.
+**Check the connector first.** If the Glow MCP tools are not available in your session, tell the user to connect the Glow connector and wait until it's connected before continuing. 
 
 **Confirm the user's Glow email.** Before doing anything else, check your memory for a stored Glow email for this user:
 
@@ -94,6 +94,23 @@ When the user's goal is clear, create the intent immediately — don't over-ask.
 Keep the exchange to one question max. Always assume you have enough context to make a reasonable first call.
 
 Label each intent clearly when creating it (e.g., `"Hiking partners in NYC"`) so the user can distinguish them at a glance.
+
+### Calling glow_intents create — exact structure
+
+The `create` action requires a `data` object. All intent fields go inside it. The type field is called `intentType` (not `type`). Both `intentType` and `label` are required.
+
+```json
+{
+  "action": "create",
+  "data": {
+    "intentType": "meet_specific_person",
+    "label": "Meet Rob at Glow",
+    "description": "Optional extra context for matching"
+  }
+}
+```
+
+Passing intent fields as top-level parameters (outside `data`) will fail with `data is required`. Using `type` instead of `intentType` will fail with `intentType and label are required`.
 
 ## Scheduling Check-ins
 
