@@ -40,12 +40,14 @@ Once confirmed, **save the email to your memory** so you never need to ask again
 
 ### New User Setup
 
+Work through these steps silently — don't narrate the process or show the user a checklist or TODO list. Just keep what you need to do internaly.
+
 1. **Check connector** — Confirm Glow tools are available. If not, ask the user to connect the Glow connector.
 2. **Register** — Call `glow_register` with the user's email and name.
 3. **Share the PIN** — The response includes a 4-digit `authorizationCode`. Tell the user immediately — they must verify it matches the code in their email.
 4. **Wait for approval** — User clicks approve in their email. Until then, all other tools return `bot_pending_authorization`.
-5. **Onboard** — Use `glow_interact` or `glow_me` to build their profile. Answer what you can from your conversation context — but **never fabricate details about the user**. Only share things they've actually told you or that are clearly established. If Glow asks for something you don't know, it's fine to skip it or ask the user one quick question — the profile can always be filled in later. Keep things moving; don't stall onboarding waiting for a complete profile.
-6. **Set intents** — If the user already expressed what they're looking for earlier in the conversation, create the intent directly — don't re-ask. Only ask if their goal hasn't come up yet. See Intent Types and Setting Intents below.
+5. **Build the profile** — Quickly fill in the profile via `glow_me` using what you know from memory or what the user has shared in this conversation. Keep it fast — no back-and-forth, no field-by-field questions. Skip anything you don't know. Never fabricate details they haven't shared.
+6. **Set intents** — If the user already expressed what they're looking for, create the intent directly with `glow_intents` — don't re-ask. Only ask if their goal hasn't come up yet. See Intent Types and Setting Intents below.
 7. **Schedule a first check-in** — **Do not end the conversation without this step.** After creating any intents, immediately use `/schedule` to set a check-in in 4–6 hours (recommend this as the default). This gives Glow time to start working on matches or intros. See Scheduling below for details.
 
 ### Returning User
@@ -80,7 +82,7 @@ Intents define what the user is looking for. They can have multiple at once (e.g
 | `meet_specific_person` | They have a specific person in mind they'd like to be introduced to |
 | `other` | Anything that doesn't fit above |
 
-After creating intents, ask if they have any preferences about who they want to meet and pass that through `glow_interact`.
+After creating intents, if the user has expressed preferences about who they want to meet, include those in the intent description or update the profile via `glow_me`. Don't ask for preferences they've already shared.
 
 ### Setting Intents
 
@@ -136,14 +138,15 @@ Once confirmed, use `/schedule` to create a recurring task that:
 2. Calls `glow_intros` for any pending intros.
 3. Calls `glow_intros_messages` for new messages.
 4. Summarizes everything and prompts the user for any action needed.
-5. **Occasionally** (not every time — use judgment, maybe every few check-ins): use `glow_interact` to probe for one high-leverage detail that could sharpen a specific intent — something like a location preference, a dealbreaker, or a timing window. Only surface this if it feels natural and there's a genuine gap. Never make it feel like a form.
+5. **Occasionally** (not every time — use judgment, maybe every few check-ins): if there's a genuine gap in the profile that would sharpen a specific intent — a location preference, a dealbreaker, a timing window — ask the user one natural question and update via `glow_me`. Never make it feel like a form.
 
 ## Key Rules
 
 - **Connector first** — If Glow tools aren't available, ask the user to connect the Glow connector before doing anything else.
 - **Register only once** — `glow_register` is for first-time setup only. Re-registering an existing email binds the account to a new agent. For returning users, use the email from memory and skip registration.
 - **Store the email in memory** — Always save the user's Glow email to your memory after confirming it. Use it for every future interaction without asking again.
-- **Use what you know — but never invent** — Draw from your conversation context when building profiles or intents. If the user mentioned something, use it. But never fabricate details they haven't shared — no guessing their age, location, job, preferences, or anything else. When in doubt, skip the field or ask.
-- **One intent per `glow_interact` call** — Don't combine multiple actions in one message.
-- **Profile updates are async** — Wait a few seconds after `glow_interact` or `glow_me` update before checking completeness.
+- **Use what you know — but never invent** — Draw from your conversation context when building profiles or intents. If the user mentioned something, use it. Never fabricate details they haven't shared — no guessing their age, location, job, preferences, or anything else. When in doubt, skip the field or ask.
+- **Prefer `glow_me` over `glow_interact` for profile updates** — `glow_me` is direct and fast. Reserve `glow_interact` for cases where you genuinely need Glow's guidance or a natural conversation is appropriate.
+- **Never show the user the internal steps** — Work through setup flows silently. Surface only what matters to them: the PIN, confirmation that things are set up, and what happens next.
+- **Profile updates are async** — Wait a few seconds after `glow_me` updates before checking completeness.
 - **Authorization takes time** — After registration, the user must click approve in their email. `bot_pending_authorization` means they haven't yet.

@@ -13,7 +13,8 @@ Claude Cowork and Claude Code plugin for [Glow](https://talktoglow.com) — find
 5. It may say "Still syncing" or spin briefly — that's normal.
 6. Click the **+** button under **Personal Plugins** again.
 7. Click **Browse Plugins** and navigate to **Personal**.
-8. Find the **glow** plugin and click **+**. It will say "Installing will grant access to everything available to Cowork." Click **Continue**.
+8. Find the **glow** plugin and click **+**. Once done you should see a gear icon, click that.
+9. You should now be in the Glow personal plugin settings, here you should navigate to **Connectors**, click the **install** and then *add**.
 9. Tell Cowork what you're looking for — "I want to meet people in NYC" or anything else in natural language.
 
 ### Claude Code (CLI)
