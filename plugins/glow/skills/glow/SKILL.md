@@ -82,7 +82,7 @@ Intents define what the user is looking for. They can have multiple at once (e.g
 | `meet_specific_person` | They have a specific person in mind they'd like to be introduced to |
 | `other` | Anything that doesn't fit above |
 
-After creating intents, if the user has expressed preferences about who they want to meet, include those in the intent description or update the profile via `glow_me`. Don't ask for preferences they've already shared.
+After creating intents, if the user has expressed preferences about who they want to meet, include those in the intent `description` when calling `glow_intents`. Don't ask for preferences they've already shared.
 
 ### Setting Intents
 
@@ -102,7 +102,7 @@ Label each intent clearly when creating it (e.g., `"Hiking partners in NYC"`) so
 
 ### Calling glow_intents create — exact structure
 
-The `create` action requires a `data` object. All intent fields go inside it. The type field is called `intentType` (not `type`). Both `intentType` and `label` are required.
+The `create` action requires a `data` parameter passed as a **JSON object** — not a string, not top-level fields. All intent fields go inside that object. The type field is called `intentType` (not `type`). Both `intentType` and `label` are required.
 
 ```json
 {
@@ -115,7 +115,10 @@ The `create` action requires a `data` object. All intent fields go inside it. Th
 }
 ```
 
-Passing intent fields as top-level parameters (outside `data`) will fail with `data is required`. Using `type` instead of `intentType` will fail with `intentType and label are required`.
+Common mistakes that will cause errors:
+- Passing `data` as a string instead of a JSON object
+- Passing intent fields as top-level parameters outside `data` → `data is required`
+- Using `type` instead of `intentType` → `intentType and label are required`
 
 ## Scheduling Check-ins
 
