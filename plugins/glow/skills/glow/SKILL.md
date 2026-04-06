@@ -102,8 +102,9 @@ Label each intent clearly when creating it (e.g., `"Hiking partners in NYC"`) so
 
 ### Calling glow_intents create — exact structure
 
-The `create` action requires a `data` parameter passed as a **JSON object** — not a string, not top-level fields. All intent fields go inside that object. The type field is called `intentType` (not `type`). Both `intentType` and `label` are required.
+The `data` parameter must be a **native JSON object** — not a serialized string, not escaped JSON. Pass it directly as an object. All intent fields go inside `data`. The type field is called `intentType` (not `type`). Both `intentType` and `label` are required.
 
+✅ Correct — `data` is an object:
 ```json
 {
   "action": "create",
@@ -115,33 +116,54 @@ The `create` action requires a `data` parameter passed as a **JSON object** — 
 }
 ```
 
-Common mistakes that will cause errors:
-- Passing `data` as a string instead of a JSON object
+❌ Wrong — `data` as a stringified JSON (will fail):
+```json
+{
+  "action": "create",
+  "data": "{\"intentType\": \"meet_specific_person\", \"label\": \"Meet Sarah at Acme\"}"
+}
+```
+
+Other mistakes that will cause errors:
 - Passing intent fields as top-level parameters outside `data` → `data is required`
 - Using `type` instead of `intentType` → `intentType and label are required`
 
+### Calling glow_me update — exact structure
+
+The `update` action requires an `info` field containing the profile fields to update. Pass it as a native JSON object.
+
+```json
+{
+  "action": "update",
+  "info": {
+    "name": "Chris",
+    "bio": "Investor based in NYC"
+  }
+}
+```
+
+Missing `info` or passing it as a string will fail.
+
 ## Scheduling Check-ins
 
-### First check-in after setup
+### After setup — schedule a recurring check-in
 
-**This is mandatory.** Every time you complete a registration or intent-creation flow, you must schedule a first check-in before wrapping up. Default to 4–6 hours and frame it as a recommendation:
+**This is mandatory.** Every time you complete a registration or intent-creation flow, you must schedule a recurring check-in before wrapping up. Default to every 4–6 hours and frame it as a recommendation:
 
-*"I'll check back in about 4–6 hours to see if Glow has any updates for you — sound good?"*
+*"I'll check back in every 4–6 hours to see if Glow has any updates for you — sound good?"*
 
-If the user suggests a different time, go with theirs. But always propose this — never skip it or leave it as optional. Use `/schedule` to create this check-in immediately.
+If the user suggests a different cadence, go with theirs. But always propose this — never skip it. Use `/schedule` to create it as a **recurring** task (not a one-time fire), repeating at the agreed interval.
 
-### Recurring check-ins
+### What the scheduled task does
 
-After the first check-in fires, use it as a natural moment to set up a recurring cadence so the user never misses a new intro or message.
+Each time the scheduled check-in runs:
 
-Ask the user: *"Want me to keep checking in on Glow for you? I'd recommend once a day."*
-
-Once confirmed, use `/schedule` to create a recurring task that:
-1. Calls `glow_status` for an overview.
-2. Calls `glow_intros` for any pending intros.
-3. Calls `glow_intros_messages` for new messages.
-4. Summarizes everything and prompts the user for any action needed.
-5. **Occasionally** (not every time — use judgment, maybe every few check-ins): if there's a genuine gap in the profile that would sharpen a specific intent — a location preference, a dealbreaker, a timing window — ask the user one natural question and update via `glow_me`. Never make it feel like a form.
+1. **No re-registration** — Use the email saved in memory. Never call `glow_register` during a scheduled task. The account is already bound.
+2. Call `glow_intros` to check for new or pending introductions.
+3. Call `glow_intros_messages` to check for new messages in active intro threads.
+4. Call `glow_status` for a general overview — new connections, activity, anything notable.
+5. Summarize everything through the lens of what the user is actually trying to achieve based on their intents. Lead with what's most relevant to their goal, not just a raw status dump. If nothing's new, say so briefly.
+6. **Occasionally** (not every run — use judgment): if there's a genuine gap in the profile that would sharpen an intent, ask one natural question and update via `glow_me`.
 
 ## Key Rules
 
