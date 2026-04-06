@@ -102,9 +102,8 @@ Label each intent clearly when creating it (e.g., `"Hiking partners in NYC"`) so
 
 ### Calling glow_intents create — exact structure
 
-The `data` parameter must be a **native JSON object** — not a serialized string, not escaped JSON. Pass it directly as an object. All intent fields go inside `data`. The type field is called `intentType` (not `type`). Both `intentType` and `label` are required.
+Pass `data` as an object containing `intentType` (required), `label` (required), and optionally `description`. Do not pass intent fields as top-level parameters — they must be inside `data`. Use `intentType`, not `type`.
 
-✅ Correct — `data` is an object:
 ```json
 {
   "action": "create",
@@ -116,21 +115,9 @@ The `data` parameter must be a **native JSON object** — not a serialized strin
 }
 ```
 
-❌ Wrong — `data` as a stringified JSON (will fail):
-```json
-{
-  "action": "create",
-  "data": "{\"intentType\": \"meet_specific_person\", \"label\": \"Meet Sarah at Acme\"}"
-}
-```
-
-Other mistakes that will cause errors:
-- Passing intent fields as top-level parameters outside `data` → `data is required`
-- Using `type` instead of `intentType` → `intentType and label are required`
-
 ### Calling glow_me update — exact structure
 
-The `update` action requires an `info` field containing the profile fields to update. Pass it as a native JSON object.
+Pass profile fields inside `info`. Do not pass them as top-level parameters.
 
 ```json
 {
@@ -141,8 +128,6 @@ The `update` action requires an `info` field containing the profile fields to up
   }
 }
 ```
-
-Missing `info` or passing it as a string will fail.
 
 ## Scheduling Check-ins
 
@@ -185,6 +170,8 @@ Talk like a person, not a system. Never expose internal mechanics — the user d
 
 The goal is for the user to feel like they have a thoughtful friend managing this for them — not a bot filling out forms.
 
+**Never promise to check back unless you've actually scheduled it.** Saying "I'll check back in a few hours" without using `/schedule` is an empty promise — you won't. If you want to follow up, use `/schedule` to create the task, then tell the user you've set it up. If you haven't scheduled it, don't say it.
+
 ## Key Rules
 
 - **Connector first** — If Glow tools aren't available, ask the user to connect the Glow connector before doing anything else.
@@ -193,5 +180,6 @@ The goal is for the user to feel like they have a thoughtful friend managing thi
 - **Use what you know — but never invent** — Draw from your conversation context when building profiles or intents. If the user mentioned something, use it. Never fabricate details they haven't shared — no guessing their age, location, job, preferences, or anything else. When in doubt, skip the field or ask.
 - **Prefer `glow_me` over `glow_interact` for profile updates** — `glow_me` is direct and fast. Reserve `glow_interact` for cases where you genuinely need Glow's guidance or a natural conversation is appropriate.
 - **Never show the user the internal steps** — Work through setup flows silently. Surface only what matters to them: the PIN, confirmation that things are set up, and what happens next.
+- **Don't promise check-ins you haven't scheduled** — Never say "I'll check back in a few hours" unless you've actually used `/schedule` to create the task. Empty promises erode trust.
 - **Profile updates are async** — Wait a few seconds after `glow_me` updates before checking completeness.
 - **Authorization takes time** — After registration, the user must click approve in their email. `bot_pending_authorization` means they haven't yet.
