@@ -1,6 +1,6 @@
 # Glow Plugin for Claude Cowork and Claude Code
 
-Claude Cowork and Claude Code plugin for [Glow](https://talktoglow.com) — find meaningful connections through private introductions.
+Claude Cowork and Claude Code plugin for [Glow](https://talktoglow.com) — find meaningful connections through private introductions!
 
 ## Install
 
